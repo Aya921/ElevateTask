@@ -17,11 +17,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v1.5.3
-        with:
-          channel:
-            flutter-version: 3.35.2
+    - name: Set up Flutter
+            uses: subosito/flutter-action@v1.5.3
+            with:
+              flutter-version: '3.35.2' # غيريها بالنسخة اللي انتي محتاجاها
+              channel: 'stable'
 
       - name: Install packages
         run: flutter pub get

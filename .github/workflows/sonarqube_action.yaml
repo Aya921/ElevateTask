@@ -1,31 +1,37 @@
 name: Build for Sonar
+
 on:
   push:
-   
+
 jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-       
-      #3 Setup Flutter
+      # 1 Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2 Setup Flutter
       - name: Set up Flutter
         uses: subosito/flutter-action@v1.5.3
         with:
-          channel:
-            flutter-version: 3.35.2
+          flutter-version: '3.35.2' # غيريها بالنسخة اللي انتي محتاجاها
+          channel: 'stable'
 
-      #4 Install Dependencies
+      # 3 Install Dependencies
       - name: Install Dependencies
         run: flutter pub get
-      #5 Run flutter tests
+
+      # 4 Run flutter tests
       - name: Run Flutter Tests
         run: flutter test --coverage
-      #6 Run Sonar cloud scan
+
+      # 5 Run Sonar cloud scan
       - name: SonarCloud Scan
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           export SONAR_SCANNER_VERSION=6.2.1.4610
@@ -36,6 +42,7 @@ jobs:
           export SONAR_SCANNER_OPTS="-server"
           sonar-scanner \
             -Dsonar.organization=your_organization \
-            -Dsonar.projectKey=your_project_key\
+            -Dsonar.projectKey=your_project_key \
             -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}

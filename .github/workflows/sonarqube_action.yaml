@@ -43,3 +43,6 @@ jobs:
             -Dsonar.tests=test
             -Dsonar.dart.analyzer.mode=FLUTTER
             -Dsonar.coverageReportPaths=coverage/lcov.info
+
+
+

@@ -6,6 +6,7 @@ class ProductEntity {
   final String category;
   final String image;
   final double rate;
+  
   final int count;
   ProductEntity({
     required this.title,

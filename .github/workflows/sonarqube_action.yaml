@@ -1,48 +1,19 @@
-name: Build for Sonar
+name: SonarQube Analysis
 
 on:
   push:
+   
+  pull_request:
+   
 
 jobs:
-  sonarcloud:
-    name: SonarCloud
+  build:
     runs-on: ubuntu-latest
 
-    steps:
-      # 1 Checkout repo
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # 2 Setup Flutter
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v1.5.3
-        with:
-          flutter-version: '3.35.2' # غيريها بالنسخة اللي انتي محتاجاها
-          channel: 'stable'
-
-      # 3 Install Dependencies
-      - name: Install Dependencies
-        run: flutter pub get
-
-      # 4 Run flutter tests
-      - name: Run Flutter Tests
-        run: flutter test --coverage
-
-      # 5 Run Sonar cloud scan
-      - name: SonarCloud Scan
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          export SONAR_SCANNER_VERSION=6.2.1.4610
-          export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64
-          curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux-x64.zip
-          unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
-          export PATH=$SONAR_SCANNER_HOME/bin:$PATH
-          export SONAR_SCANNER_OPTS="-server"
-          sonar-scanner \
-            -Dsonar.organization=your_organization \
-            -Dsonar.projectKey=your_project_key \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+  steps:
+    - uses: actions/checkout@v5
+    - name: Build with Maven and SonarQube Scan
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        -Qsonar.projectKey=your_project_key
+        -Qsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+        -Dsonar.token=${{ secrets.SONAR_TOKEN }}

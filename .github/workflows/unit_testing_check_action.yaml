@@ -3,10 +3,8 @@ name: Flutter Unit Testing Action
 on:
   workflow_dispatch:
   branches: 
-    -main
-    -development
-    -release/*
-    -feature/*
+   
+   
   pull_request:
    
     

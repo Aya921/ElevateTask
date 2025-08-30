@@ -44,7 +44,8 @@ jobs:
             -Dsonar.dart.analyzer.mode=FLUTTER
 
       - name: SonarQube Quality Gate Check
-        uses: SonarSource/sonarqube-quality-gate-action@v1.2
+        uses: SonarSource/sonarqube-quality-gate-action@master
+        id: quality-gate-check
         timeout-minutes: 10
         env:
           SONAR_TOKEN: ${{ secrets. SONAR_TOKEN }}
